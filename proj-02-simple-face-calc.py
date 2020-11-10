@@ -1,5 +1,7 @@
 import cv2, time, dlib
 import math
+import importlib
+from nicefacelib.src.faceformulas.SimpleGeometry import SimpleGeometry
 
 video=cv2.VideoCapture(0)
 
@@ -10,6 +12,9 @@ try:
 
     tick=0
 
+    geo = SimpleGeometry()
+    geo.hello()
+
     while True:
         tick=tick+1
 
@@ -18,14 +23,6 @@ try:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         faces = detector(gray)
-        
-        # for face in faces:
-        #     x1 = face.left()
-        #     x2 = face.right()
-        #     y1 = face.top()
-        #     y2 = face.bottom()
-        #     # draw rect
-        #     cv2.rectangle(frame, (x1,y1), (x2,y2), color=(255,0,0), thickness=1)
 
         #scale and show image for ease of seeing lel
         width = int(frame.shape[1] * 2)
@@ -48,6 +45,8 @@ try:
         key = cv2.waitKey(20)
 
         if key == ord('q'):
+            break
+        if key == 27: #esc
             break
 
 finally:
