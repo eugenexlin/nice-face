@@ -27,9 +27,9 @@ class MovingAverage:
 
     #flatten single scalar is useless personally nice feature that says
     # if your dimension = 1, and you return [x]. return non matrix x instead
-    def currVal(self, flattenSingleScalar=1):
+    def current(self, flattenSingleScalar=1):
         val = avgAllPts(*self.entries)
         if flattenSingleScalar:
             if len(val) == 1:
                 return val[0]
-        return val
+        return np.array(val)

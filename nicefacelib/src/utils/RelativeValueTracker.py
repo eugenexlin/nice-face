@@ -20,7 +20,7 @@ class RelativeValueTracker:
             self.lastIndex = self.index
             self.index = (self.index + 1) % len(self.entries)
 
-    def currVal(self):
+    def current(self):
         if (self.index < 0):
             return 0
         sum=np.sum(self.entries)
