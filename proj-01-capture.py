@@ -42,7 +42,6 @@ try:
                 cv2.circle(bigFrame, (x,y), radius=1, color=(0,255,0), thickness=-1)
                 cv2.putText(bigFrame, str(n), (x+4,y+4), cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(255,200,0))
 
-
         cv2.putText(bigFrame, "press esc to quit", (3,20), cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,200))
         cv2.imshow("Capture", bigFrame)
 

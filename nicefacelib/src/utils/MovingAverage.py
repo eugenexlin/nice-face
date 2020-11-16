@@ -1,24 +1,19 @@
 import numpy as np
+from nicefacelib.src.utils.DataUtils import *
 
 class MovingAverage:
 
-    entryCount = 3
-    entries = []
-    index = -1
-    lastIndex = 0
-
-    def __init__(self, entryCount):
+    def __init__(self, entryCount, entryDimension = 1, dType=float):
         self.entryCount = entryCount
-        self.entries = []
+        self.entryDimension = entryDimension
+        self.entries = np.zeros((entryCount, entryDimension), dType)
         self.index = -1
         self.lastIndex = 0
 
     def push(self, value):
         if (self.index < 0):
-            #first time, fill the array
-            entries = []
             for i in range(self.entryCount):
-                self.entries.append(value)
+                self.entries[i] = value
             self.index = 0
         else:
             self.entries[self.index] = value
@@ -27,10 +22,14 @@ class MovingAverage:
 
     def forceVal(self, value):
         for i in range(self.entryCount):
-            self.entries[i] = (value)
+            self.entries[i] = value
+        self.index = 0
 
-    def currVal(self):
-        if (self.index < 0):
-            return 0
-        sum=np.sum(self.entries)
-        return sum/self.entryCount
+    #flatten single scalar is useless personally nice feature that says
+    # if your dimension = 1, and you return [x]. return non matrix x instead
+    def currVal(self, flattenSingleScalar=1):
+        val = avgAllPts(*self.entries)
+        if flattenSingleScalar:
+            if len(val) == 1:
+                return val[0]
+        return val

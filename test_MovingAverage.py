@@ -50,3 +50,22 @@ def test_MovingAverage_ForceVal():
     assert val.currVal() == -2
     val.push(-6)
     assert val.currVal() == -6
+
+def test_MovingAverage_TestArr():
+    val = MovingAverage.MovingAverage(3,2)
+    val.forceVal([0,0])
+    assert val.currVal() == [0,0]
+    val.push([3,6])
+    assert val.currVal() == [1,2]
+    val.push([3,6])
+    assert val.currVal() == [2,4]
+    val.push([3,6])
+    assert val.currVal() == [3,6]
+def test_MovingAverage_TestArr():
+    val = MovingAverage.MovingAverage(3,2)
+    val.push([3,6])
+    assert val.currVal() == [3,6]
+    val.push([0,0])
+    assert val.currVal() == [2,4]
+    val.push([0,0])
+    assert val.currVal() == [1,2]
