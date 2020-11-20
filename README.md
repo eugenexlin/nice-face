@@ -15,5 +15,5 @@ https://www.youtube.com/watch?v=1XTqE7LFQjI
 using dlib
 https://thenextweb.com/syndication/2020/07/06/a-comprehensive-guide-on-how-to-detect-faces-with-python/
 
-eye tracking using masking
-https://towardsdatascience.com/real-time-eye-tracking-using-opencv-and-dlib-b504ca724ac6
+pupil tracking
+https://pysource.com/2019/01/04/eye-motion-tracking-opencv-with-python/

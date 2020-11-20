@@ -17,7 +17,8 @@ try:
 
     tick=0
     faceCalculator = SimpleGeometry()
-    eyeTracker = EyeTracker(paddingTopRatio=0.1)
+    eyeTracker = EyeTracker()
+    eyeTracker.paddingTopRatio = 0.15
 
     while True:
         tick=tick+1

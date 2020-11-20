@@ -11,11 +11,11 @@ class EyeTracker:
     # along the perpendicular of the eye
     # give something like 0.1??
     paddingTopRatio = 0.0
+    gaussianBlurFactor = 11
     
-    def __init__(self, smoothing=2, paddingTopRatio=0.0):
+    def __init__(self, smoothing=2):
         # raw data that should get smoothing
         self.Head = MovingAverage(smoothing, 2)
-        self.paddingTopRatio = paddingTopRatio
 
     def CreateMask(self, frame, coordinates):
         mask = np.zeros(frame.shape[:2], dtype=np.uint8)
@@ -24,7 +24,8 @@ class EyeTracker:
 
     def DrawEyeToMask(self, mask, points):
         points = np.array(points, dtype=np.int32)
-        mask = cv2.fillConvexPoly(mask, points, 255)
+        points.fill(255)
+        mask = cv2.fillConvexPoly(mask, points, 0)
         return mask
 
     # func() => (x,y) , workframe
@@ -49,22 +50,24 @@ class EyeTracker:
 
         offsetPoints = np.array([pt - rekt[0] for pt in points])
         if (workframe.shape[0] > 0 and workframe.shape[1] > 0):
-
-            workframe = cv2.GaussianBlur(workframe, (min(workframe.shape[0],10),min(workframe.shape[1],10)), 0)
+            workframe = cv2.GaussianBlur(workframe, (11,11), 0)
             mask = self.CreateMask(workframe, offsetPoints)
-            workframe = cv2.bitwise_and(workframe, mask)
+            minVal = workframe.min()
+            workframe = workframe - minVal
+            workframe = cv2.bitwise_or(workframe, mask)
 
-        # rows, cols = frame.shape
-        # threshold, _ = cv2.threshold(workframe, 3, 255, cv2.THRESH_BINARY_INV)
-        # contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-        # for cnt in contours:
-        #     (x, y, w, h) = cv2.boundingRect(cnt)
-        #     #cv2.drawContours(roi, [cnt], -1, (0, 0, 255), 3)
-        #     cv2.rectangle(workframe, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        #     cv2.line(workframe, (x + int(w/2), 0), (x + int(w/2), rows), (0, 255, 0), 2)
-        #     cv2.line(workframe, (0, y + int(h/2)), (workframe, y + int(h/2)), (0, 255, 0), 2)
-        #     break
+        # workframe = cv2.cvtColor(workframe, cv2.COLOR_BGR2GRAY)
+        rows, cols = workframe.shape
+        _, threshold = cv2.threshold(workframe, 10, 255, cv2.THRESH_BINARY_INV)
+        contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+        for cnt in contours:
+            (x, y, w, h) = cv2.boundingRect(cnt)
+            #cv2.drawContours(roi, [cnt], -1, (0, 0, 255), 3)
+            cv2.rectangle(workframe, (x, y), (x + w, y + h), (255, 0, 0), 1)
+            cv2.line(workframe, (x + int(w/2), 0), (x + int(w/2), rows), (0, 255, 0), 1)
+            cv2.line(workframe, (0, y + int(h/2)), (cols, y + int(h/2)), (0, 255, 0), 1)
+            
 
         return np.array([0,0], int), workframe
 
