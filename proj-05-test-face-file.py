@@ -29,7 +29,9 @@ for path in files:
         faceCalculator.Next68Coordinates(coordinates)
         frame = eyeTracker.CalculatePupils(frame, coordinates)
         
-    cv2.imshow(path, frame)
+    recolor = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+    cv2.putText(recolor, "press any key to destroy all windows", (3,20), cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0,0,255))
+    cv2.imshow(path, recolor)
 
 cv2.waitKey()
 
