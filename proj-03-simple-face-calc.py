@@ -7,8 +7,11 @@ from nicefacelib.src.utils.ConvertDlib import *
 from nicefacelib.src.utils.DataUtils import *
 
 video=cv2.VideoCapture(0)
-video.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-video.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+# video.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+# video.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+video.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
+video.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+video.set(cv2.CAP_PROP_FPS, 60)
 
 try:
 
@@ -19,6 +22,7 @@ try:
     faceCalculator = SimpleGeometry()
     eyeTracker = EyeTracker()
     eyeTracker.paddingTopRatio = 0.15
+    eyeTracker.debugDrawEye = 1
 
     while True:
         tick=tick+1
@@ -37,6 +41,7 @@ try:
             frame = eyeTracker.CalculatePupils(frame, coordinates)
 
             # for n in range(0, len(coordinates)):
+            # for n in range(36, 48):  # eyes
             #     cv2.circle(frame, tuple(coordinates[n].astype(int)), radius=1, color=(0,255,0), thickness=-1)
             #     cv2.putText(frame, str(n), tuple(coordinates[n].astype(int) + 4), cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(255,200,0))
             
@@ -128,7 +133,7 @@ try:
 
         cv2.imshow("Capture", frame)
 
-        key = cv2.waitKey(10)
+        key = cv2.waitKey(5)
 
         if key == ord('q'):
             break
