@@ -3,18 +3,18 @@ import numpy as np
 from nicefacelib.src.utils.DataUtils import *
 
 def test_AvgPoint_2Dim1():
-    assert avgAllPts([0,0],[0,2],[0,4]) == [0,2]
+    np.testing.assert_array_equal(avgAllPts([0,0],[0,2],[0,4]), [0,2])
 
 def test_AvgPoint_2Dim2():
-    assert avgAllPts([3,0],[4,2],[5,4]) == [4,2]
+    np.testing.assert_array_equal( avgAllPts([3,0],[4,2],[5,4]), [4,2])
 
 def test_AvgPoint_1Dim():
-    assert avgAllPts([9],[4],[5]) == [6]
-    assert avgAllPts([9],[4],[5]) != [5]
+    np.testing.assert_array_equal( avgAllPts([9],[4],[5]) , [6])
+    np.testing.assert_raises(AssertionError, np.testing.assert_array_equal, avgAllPts([9],[4],[5]), [5])
 
 def test_AvgPoint_3Dim():
-    assert avgAllPts([3,3,3],[6,6,6],[9,9,9],[12,12,12],[15,15,15]) == [9,9,9]
-    assert avgAllPts([3,3,3],[6,6,6],[9,9,9],[12,12,12],[15,15,15]) != [9,1,1]
+    np.testing.assert_array_equal( avgAllPts([3,3,3],[6,6,6],[9,9,9],[12,12,12],[15,15,15]) , [9,9,9])
+    np.testing.assert_raises(AssertionError, np.testing.assert_array_equal, avgAllPts([3,3,3],[6,6,6],[9,9,9],[12,12,12],[15,15,15]), [9,1,1])
 
 def test_AvgPoint_2DMatrix():
     data = [
@@ -22,15 +22,14 @@ def test_AvgPoint_2DMatrix():
         [2,2,2],
         [3,3,3]
     ]
-    assert avgAllPts(*data) == [2,2,2]
-    assert avgAllPts(*data) != [2,1,2]
+    np.testing.assert_array_equal( avgAllPts(*data), [2,2,2])
+    np.testing.assert_raises(AssertionError, np.testing.assert_array_equal, avgAllPts(*data), [2,1,2])
 
 def test_AvgPoint_npNDArray():
     data = np.zeros((2, 2), float)
     data.fill(5)
     assert np.all(data==5)
-    assert avgAllPts(*data) == [5,5]
-
+    np.testing.assert_array_equal( avgAllPts(*data), [5,5])
 
 def test_AvgPoint_IndexAddress():
     data = np.array(range(1, 50), float)

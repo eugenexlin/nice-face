@@ -12,6 +12,7 @@ predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 faceCalculator = SimpleGeometry()
 eyeTracker = EyeTracker()
 eyeTracker.debugDrawEye = 1
+eyeTracker.IsFindPupilEnabled = 1
 
 files = ["testfaces\\face1.png", "testfaces\\face2.png"]
 
