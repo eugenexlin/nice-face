@@ -70,44 +70,52 @@ testEye = Image.open("assets\\testeye.png")
 
 loop = 0
 while True:
-  loop = loop + 1
-  
-
-  im = testGrid
-  dst_grid = griddify(shape_to_rect(im.size), 32, 32)
-  src_grid = distort_grid(dst_grid, 60, 9, loop)
-  mesh = grid_to_mesh(src_grid, dst_grid)
-  im = im.transform(im.size, Image.MESH, mesh)
-
-  open_cv_image = np.array(im) 
-  open_cv_image = open_cv_image[:, :, ::-1].copy() 
-
-  im = testEye
-  # im = im.resize((round(im.size[0]*2), round(im.size[1]*2)))
-  im = im.resize((round(im.size[0]*.2), round(im.size[1]*.2)))
-  dst_grid = griddify(shape_to_rect(im.size), 6, 4)
-  src_grid = distort_grid(dst_grid, np.abs(15-loop*3%30), 6, 20)
-  mesh = grid_to_mesh(src_grid, dst_grid)
-  im = im.transform(im.size, Image.MESH, mesh)
-  # im = im.resize((round(im.size[0]*0.5), round(im.size[1]*0.5)))
-  open_cv_eye = cv2.cvtColor(np.array(im), cv2.COLOR_RGBA2BGRA)
-
-  x, y = open_cv_eye.shape[0], open_cv_eye.shape[1]
-  alpha = open_cv_eye[:, :, 3] / 255.0
-  # open_cv_image[:, :, 0] = (1. - alpha) * open_cv_image[:, :, 0] + alpha * open_cv_eye[:, :, 0]
-  # open_cv_image[:, :, 1] = (1. - alpha) * open_cv_image[:, :, 1] + alpha * open_cv_eye[:, :, 1]
-  # open_cv_image[:, :, 2] = (1. - alpha) * open_cv_image[:, :, 2] + alpha * open_cv_eye[:, :, 2]
-  open_cv_image[400:400+x, 400:400+x,  0] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  0] + alpha * open_cv_eye[:, :, 0]
-  open_cv_image[400:400+x, 400:400+x,  1] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  1] + alpha * open_cv_eye[:, :, 1]
-  open_cv_image[400:400+x, 400:400+x, 2] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  2] + alpha * open_cv_eye[:, :, 2]
-  # open_cv_image[400:400+x, 400:400+y, 0:3] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y, 0:3] + alpha * open_cv_eye[:, :, 0:3]
-
-  cv2.imshow("Test", open_cv_image)
+    loop = loop + 1
 
 
-  key = cv2.waitKey(1)
+    im = testGrid
+    dst_grid = griddify(shape_to_rect(im.size), 32, 32)
+    src_grid = distort_grid(dst_grid, 50, 9, loop)
+    mesh = grid_to_mesh(src_grid, dst_grid)
+    im = im.transform(im.size, Image.MESH, mesh)
 
-  if key == ord('q'):
-      break
-  if key == 27: #esc
-      break
+    open_cv_image = cv2.cvtColor(np.array(im), cv2.COLOR_RGBA2BGRA)
+
+    im = testEye
+    # im = im.resize((round(im.size[0]*2), round(im.size[1]*2)))
+    im = im.resize((round(im.size[0]*.2), round(im.size[1]*.2)))
+    dst_grid = griddify(shape_to_rect(im.size), 6, 4)
+    src_grid = distort_grid(dst_grid, np.abs(15-loop*3%30), 6, 20)
+    mesh = grid_to_mesh(src_grid, dst_grid)
+    im = im.transform(im.size, Image.MESH, mesh)
+    # im = im.resize((round(im.size[0]*0.5), round(im.size[1]*0.5)))
+    open_cv_eye = cv2.cvtColor(np.array(im), cv2.COLOR_RGBA2BGRA)
+
+    x, y = open_cv_eye.shape[0], open_cv_eye.shape[1]
+    alpha = open_cv_eye[:, :, 3] / 255.0
+
+    srcRGB = open_cv_image[...,:3]
+    dstRGB = open_cv_eye[...,:3]
+    srcA = open_cv_image[...,3]/255.0
+    dstA = open_cv_eye[...,3]/255.0
+    outA = srcA[400:400+x, 400:400+y] + dstA*(1-srcA[400:400+x, 400:400+y])
+    outRGB = (srcRGB[400:400+x, 400:400+y]*srcA[400:400+x, 400:400+y,np.newaxis] + dstRGB*dstA[...,np.newaxis]*(1-srcA[400:400+x, 400:400+y,np.newaxis])) / outA[...,np.newaxis]
+    # open_cv_image[:, :, 0] = (1. - alpha) * open_cv_image[:, :, 0] + alpha * open_cv_eye[:, :, 0]
+    # open_cv_image[:, :, 1] = (1. - alpha) * open_cv_image[:, :, 1] + alpha * open_cv_eye[:, :, 1]
+    # open_cv_image[:, :, 2] = (1. - alpha) * open_cv_image[:, :, 2] + alpha * open_cv_eye[:, :, 2]
+    # open_cv_image[400:400+x, 400:400+x,  0] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  0] + alpha * open_cv_eye[:, :, 0]
+    # open_cv_image[400:400+x, 400:400+x,  1] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  1] + alpha * open_cv_eye[:, :, 1]
+    # open_cv_image[400:400+x, 400:400+x, 2] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y,  2] + alpha * open_cv_eye[:, :, 2]
+    # open_cv_image[400:400+x, 400:400+y, 0:3] = (1. - alpha) * open_cv_image[400:400+x, 400:400+y, 0:3] + alpha * open_cv_eye[:, :, 0:3]
+    open_cv_image[400:400+x, 400:400+y] = np.dstack((outRGB,outA*255)).astype(np.uint8)
+
+
+    cv2.imshow("Test", open_cv_image)
+
+
+    key = cv2.waitKey(1)
+
+    if key == ord('q'):
+        break
+    if key == 27: #esc
+        break
