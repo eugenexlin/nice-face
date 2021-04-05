@@ -10,7 +10,7 @@ class MyApp(App):
     def build(self):
         Window.size = (1280, 720)
         gewidget = GridEditorWidget()
-        gewidget.initialize()
+        gewidget.setGrid(4,4)
         img = Image("assets\\testgrid.png")
         gewidget.setImage(img)
         return gewidget
