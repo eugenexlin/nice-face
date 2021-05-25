@@ -10,11 +10,11 @@ class MyApp(App):
     def build(self):
         Window.size = (1280, 720)
         gewidget = GridEditorWidget()
-        gewidget.setGrid(4,4)
-        img = Image("assets\\testgrid.png")
+        gewidget.setGrid(3,3)
+        img = Image("assets\\head01.png")
         gewidget.setImage(img)
         return gewidget
 
 
 if __name__ == '__main__':
-    MyApp().run()
+    MyApp().run() 

@@ -218,7 +218,7 @@ class GridEditorCanvas(RelativeLayout):
         pass
 
 class GridEditorWidget(BoxLayout): 
-    HOVER_DISTANCE = 20 #PX
+    HOVER_DISTANCE = 40 #PX
 
     editorCanvas = ObjectProperty(None)
     sidePanel = ObjectProperty(None)
@@ -369,7 +369,7 @@ class GridEditorWidget(BoxLayout):
         for i in range(self.countX):
             for j in range(self.countY):
                 u = float(i)/float(self.countX-1)
-                v = float(j)/float(self.countY-1)
+                v = float(self.countY-j-1)/float(self.countY-1)
                 vertex: Vertex = self.vertices[i][j] 
                 self.updateVertexPositionFromPixel(vertex)
                 meshVertices.extend([vertex.pos[0], vertex.pos[1], u,v])
