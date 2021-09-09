@@ -1,5 +1,7 @@
 # nice-face
 
+UPDATE: i dont need this project anymore, because i tried Live2d Cubism and it is amazing and all you need lol
+
 i just want a nice face
 
 2020/11/9
